@@ -7,7 +7,7 @@ const filtersData = {
   heat: { range: { min: 1, max: 3 }, step: 0.1 }
 };
 
-let currentFilter;
+let activeFilter;
 
 const formImgUploadWrapper = document.querySelector('.img-upload__wrapper');
 const slider = formImgUploadWrapper.querySelector('.img-upload__effect-level');
@@ -17,7 +17,7 @@ const imgUploadPreview = formImgUploadWrapper.querySelector('.img-upload__previe
 const noneRadioButton = formImgUploadWrapper.querySelector('#effect-none');
 
 const changeFilter = (value) => {
-  switch (currentFilter) {
+  switch (activeFilter) {
     case 'none': imgUploadPreview.style.filter = ''; break;
     case 'chrome': imgUploadPreview.style.filter = `grayscale(${value})`; break;
     case 'sepia': imgUploadPreview.style.filter = `sepia(${value})`; break;
@@ -49,18 +49,18 @@ levelSlider.noUiSlider.on('update', () => {
 levelSlider.setAttribute('disabled', true);
 
 const resetFilter = () => {
-  currentFilter = 'none';
+  activeFilter = 'none';
   noneRadioButton.checked = true;
   levelSlider.noUiSlider.set(0);
   levelSlider.setAttribute('disabled', true);
 };
 
-const onFormClickFilter = (evt) => {
+const onImgUploadEffectsClick = (evt) => {
   slider.classList.remove('hidden');
   const clickedElementId = evt.target.id.split('-')[1];
   if (clickedElementId !== 'none') {
     levelSlider.removeAttribute('disabled');
-    currentFilter = clickedElementId;
+    activeFilter = clickedElementId;
     levelSlider.noUiSlider.updateOptions({
       range: {
         min: filtersData[clickedElementId].range.min,
@@ -75,4 +75,4 @@ const onFormClickFilter = (evt) => {
   }
 };
 
-export { onFormClickFilter, resetFilter };
+export { onImgUploadEffectsClick, resetFilter };

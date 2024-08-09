@@ -8,8 +8,8 @@ const templateSuccess = document.querySelector('#success');
 const templateError = document.querySelector('#error');
 const submitButton = form.querySelector('.img-upload__submit');
 
-let notificationElement;
-let notificationCancel;
+let notificationContainer;
+let notificationCloseButton;
 let isResponseError;
 
 const pristine = new Pristine(form, {
@@ -21,41 +21,40 @@ const pristine = new Pristine(form, {
 pristine.addValidator(form.querySelector('.text__hashtags'), validateHashtags, getErrorText);
 pristine.addValidator(form.querySelector('.text__description'), validateDescription, getErrorText);
 
-const resetPristin = () => {
+const resetPristine = () => {
   pristine.reset();
 };
-
 
 const closeNotification = () => {
   if (isResponseError) {
     formImgUploadOverlay.classList.remove('hidden');
   }
-  if (notificationCancel) {
-    notificationCancel.removeEventListener('click', onNotificationClickCancel);
-    notificationElement.removeEventListener('click', onNotificationClickElsewhere);
+  if (notificationCloseButton) {
+    notificationCloseButton.removeEventListener('click', onNotificationCloseButtonClick);
+    notificationContainer.removeEventListener('click', onNotificationElsewhereClick);
   }
-  document.removeEventListener('keydown', onNotificationEsc);
-  if (notificationElement) {
-    notificationElement.remove();
-    notificationElement = null;
+  document.removeEventListener('keydown', onNotificationEscKeydown);
+  if (notificationContainer) {
+    notificationContainer.remove();
+    notificationContainer = null;
   }
 };
 
 const showNotification = (isError) => {
   const clone = document.importNode(isError ? templateError.content : templateSuccess.content, true);
 
-  if (notificationElement) {
-    document.body.removeChild(notificationElement);
+  if (notificationContainer) {
+    document.body.removeChild(notificationContainer);
   }
 
-  notificationElement = document.createElement('div');
-  notificationElement.appendChild(clone);
-  document.body.appendChild(notificationElement);
+  notificationContainer = document.createElement('div');
+  notificationContainer.appendChild(clone);
+  document.body.appendChild(notificationContainer);
 
-  notificationCancel = document.querySelector(isError ? '.error__button' : '.success__button');
-  notificationCancel.addEventListener('click', onNotificationClickCancel);
-  document.addEventListener('keydown', onNotificationEsc);
-  notificationElement.addEventListener('click', onNotificationClickElsewhere);
+  notificationCloseButton = document.querySelector(isError ? '.error__button' : '.success__button');
+  notificationCloseButton.addEventListener('click', onNotificationCloseButtonClick);
+  document.addEventListener('keydown', onNotificationEscKeydown);
+  notificationContainer.addEventListener('click', onNotificationElsewhereClick);
 };
 
 const blockSubmitButton = () => {
@@ -91,12 +90,12 @@ const setUserFormSubmit = (onSuccess) => {
   });
 };
 
-function onNotificationClickCancel (evt) {
+function onNotificationCloseButtonClick (evt) {
   evt.preventDefault();
   closeNotification();
 }
 
-function onNotificationClickElsewhere (evt) {
+function onNotificationElsewhereClick (evt) {
   if (!evt.target.closest('.error__inner') && isResponseError) {
     closeNotification();
   } else if (!evt.target.closest('.success__inner') && !isResponseError) {
@@ -104,11 +103,11 @@ function onNotificationClickElsewhere (evt) {
   }
 }
 
-function onNotificationEsc (evt){
+function onNotificationEscKeydown (evt){
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeNotification();
   }
 }
 
-export { setUserFormSubmit, resetPristin };
+export { setUserFormSubmit, resetPristine };
