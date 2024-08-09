@@ -1,7 +1,10 @@
 import { isEscapeKey } from './util.js';
-import { onFormClickScaleButtons, updateImageScale } from './form-img-upload-scale.js';
-import { onFormClickFilter, resetFilter } from './form-img-upload-slider.js';
-import { resetPristin } from './form-img-upload-sending-data.js';
+import { onScaleButtonsClick, updateImageScale } from './form-img-upload-scale.js';
+import { onImgUploadEffectsClick, resetFilter } from './form-img-upload-slider.js';
+import { resetPristine } from './form-img-upload-sending-data.js';
+
+const TIMEOUT_DELAY = 2000;
+const DEFAULT_IMAGE_SCALE = 100;
 
 const form = document.querySelector('.img-upload__form');
 const formImgUploadInput = form.querySelector('.img-upload__input');
@@ -33,7 +36,7 @@ const showError = () => {
 
   setTimeout(() => {
     errorElement.remove();
-  }, 2000);
+  }, TIMEOUT_DELAY);
 };
 
 const openForm = () => {
@@ -53,11 +56,11 @@ const openForm = () => {
     formImgUploadOverlay.classList.remove('hidden');
     slider.classList.add('hidden');
 
-    formImgUploadCancel.addEventListener('click', onFormClickCancel);
-    document.addEventListener('keydown', onFormEsc);
+    formImgUploadCancel.addEventListener('click', onCancelButtonClick);
+    document.addEventListener('keydown', onOverlayEscKeydown);
 
-    formImgUploadScale.addEventListener('click', onFormClickScaleButtons);
-    imgUploadEffects.addEventListener('change', onFormClickFilter);
+    formImgUploadScale.addEventListener('click', onScaleButtonsClick);
+    imgUploadEffects.addEventListener('change', onImgUploadEffectsClick);
   } else {
     showError();
     formImgUploadInput.value = '';
@@ -72,8 +75,8 @@ const resetForm = () => {
     preview.style.backgroundSize = '';
   });
   resetFilter();
-  updateImageScale(100);
-  resetPristin();
+  updateImageScale(DEFAULT_IMAGE_SCALE);
+  resetPristine();
 };
 
 const closeForm = (isError) => {
@@ -81,16 +84,16 @@ const closeForm = (isError) => {
   formImgUploadOverlay.classList.add('hidden');
 
   if (!isError) {
-    formImgUploadCancel.removeEventListener('click', onFormClickCancel);
-    document.removeEventListener('keydown', onFormEsc);
-    formImgUploadScale.removeEventListener('click', onFormClickScaleButtons);
-    imgUploadEffects.removeEventListener('change', onFormClickFilter);
+    formImgUploadCancel.removeEventListener('click', onCancelButtonClick);
+    document.removeEventListener('keydown', onOverlayEscKeydown);
+    formImgUploadScale.removeEventListener('click', onScaleButtonsClick);
+    imgUploadEffects.removeEventListener('change', onImgUploadEffectsClick);
 
     resetForm();
   }
 };
 
-function onFormEsc (evt) {
+function onOverlayEscKeydown (evt) {
 
   if (isEscapeKey(evt) && !formImgUploadOverlay.classList.contains('hidden')) {
 
@@ -108,7 +111,7 @@ function onFormEsc (evt) {
   }
 }
 
-function onFormClickCancel (evt) {
+function onCancelButtonClick (evt) {
   evt.preventDefault();
   closeForm();
 }

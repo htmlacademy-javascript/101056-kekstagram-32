@@ -1,14 +1,14 @@
-import { sortArrayDescending, shuffleArray, debounce } from './util.js';
+import { sortItemsInDescendingOrder, shuffleItems, debounce } from './util.js';
 import { renderThumbnailListWithRetry } from './render-thumbnails.js';
 
 const RERENDER_DELAY = 500;
 const PICTURE_COUNT = 10;
 
-const imgFilters = document.querySelector('.img-filters');
+const imgFiltersContainer = document.querySelector('.img-filters');
 
 const clearThumbnailList = () => {
-  const thumbnails = document.querySelectorAll('.picture');
-  thumbnails.forEach((element) => {
+  const thumbnailElements = document.querySelectorAll('.picture');
+  thumbnailElements.forEach((element) => {
     element.remove();
   });
 };
@@ -16,8 +16,8 @@ const clearThumbnailList = () => {
 const changeThumbnailList = (evt, data) => {
   const filterActions = {
     'filter-default': () => data,
-    'filter-random': () => shuffleArray(data.slice()).slice(0, PICTURE_COUNT),
-    'filter-discussed': () => sortArrayDescending(data.slice(), (item) => item.comments.length),
+    'filter-random': () => shuffleItems(data.slice()).slice(0, PICTURE_COUNT),
+    'filter-discussed': () => sortItemsInDescendingOrder(data.slice(), (item) => item.comments.length),
   };
 
   const filterButton = Object.keys(filterActions).find((filter) => evt.target.closest(`#${filter}`));
@@ -34,9 +34,9 @@ const setFiltersClick = (data) => {
     changeThumbnailList(evt, data);
   }, RERENDER_DELAY);
 
-  imgFilters.addEventListener('click', (evt) => {
+  imgFiltersContainer.addEventListener('click', (evt) => {
     if (evt.target.classList.contains('img-filters__button')) {
-      const buttons = imgFilters.querySelectorAll('.img-filters__button');
+      const buttons = imgFiltersContainer.querySelectorAll('.img-filters__button');
       const button = evt.target.closest('.img-filters__button');
 
       if (
@@ -52,7 +52,7 @@ const setFiltersClick = (data) => {
 };
 
 const showFilters = (data) => {
-  imgFilters.classList.remove('img-filters--inactive');
+  imgFiltersContainer.classList.remove('img-filters--inactive');
   setFiltersClick(data);
 };
 

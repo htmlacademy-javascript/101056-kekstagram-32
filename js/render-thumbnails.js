@@ -1,6 +1,10 @@
 import { openModalBigPhoto, closeModalBigPhoto } from './render-big-picture.js';
 import { showFilters } from './filters.js';
 
+const RENDER_ERROR_RETRY_DELAY = 500;
+const SHOW_ERROR_TIMEOUT_DELAY = 5000;
+const NUMBER_OF_RENDER_ATTEMPTS = 2;
+
 const thumbnailContainer = document.querySelector('.pictures');
 const modalBigPicture = document.querySelector('.big-picture');
 const bigPictureCancel = modalBigPicture.querySelector('.big-picture__cancel');
@@ -32,14 +36,14 @@ const renderThumbnailListWithRetry = (data) => {
       if (retries > 0) {
         setTimeout(() => {
           attemptRender(retries - 1);
-        }, 500);
+        }, RENDER_ERROR_RETRY_DELAY);
       } else {
         throw new Error('Не удалось выполнить renderThumbnailList');
       }
     }
   };
 
-  attemptRender(2);
+  attemptRender(NUMBER_OF_RENDER_ATTEMPTS);
 };
 
 const setThumbnailsClick = (data) => {
@@ -66,7 +70,7 @@ const showError = () => {
 
   setTimeout(() => {
     errorElement.remove();
-  }, 5000);
+  }, SHOW_ERROR_TIMEOUT_DELAY);
 };
 
 

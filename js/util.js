@@ -1,3 +1,5 @@
+const ESCAPE_KEY_CODE = 27;
+
 const getRandomNumber = (from, to) => {
   const lower = Math.ceil(Math.min(from, to));
   const upper = Math.floor(Math.max(from, to));
@@ -5,33 +7,33 @@ const getRandomNumber = (from, to) => {
   return Math.floor(result);
 };
 
-const isEscapeKey = (evt) => evt.keyCode === 27;
+const isEscapeKey = (evt) => evt.keyCode === ESCAPE_KEY_CODE;
 
-const hasDuplicates = (array) => new Set(array).size !== array.length;
-
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
+const shuffleItems = (inputItems) => {
+  for (let i = inputItems.length - 1; i > 0; i--) {
     const j = getRandomNumber(0, i + 1);
-    [array[i], array[j]] = [array[j], array[i]];
+    [inputItems[i], inputItems[j]] = [inputItems[j], inputItems[i]];
   }
-  return array;
+  return inputItems;
 };
 
-const sortArrayDescending = (array, compareFunction) =>
-  [...array].sort((a, b) => compareFunction(b) - compareFunction(a));
+const hasDuplicates = (inputItems) => new Set(inputItems).size !== inputItems.length;
 
-const debounce = (cb, timeoutDelay) => {
+const sortItemsInDescendingOrder = (inputItems, comparisonFunction) =>
+  [...inputItems].sort((firstElement, secondElement) => comparisonFunction(secondElement) - comparisonFunction(firstElement));
+
+const debounce = (callback, timeoutDelay) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 };
 
 export {
   isEscapeKey,
   hasDuplicates,
-  shuffleArray,
-  sortArrayDescending,
+  shuffleItems,
+  sortItemsInDescendingOrder,
   debounce
 };

@@ -9,15 +9,15 @@ const commentsLoader = bigPictureSocial.querySelector('.comments-loader');
 const findPhotoObject = (pictureId, photoData) =>
   photoData.find((item) => item.id === parseInt(pictureId, 10));
 
-const onModalClickLoadMore = () => renderMoreComments();
+const onCommentsLoaderClick = () => renderMoreComments();
 
 const openModalBigPhoto = (pictureId, photoData) => {
   modalBigPhoto.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  document.addEventListener('keydown', onModalKeydownEsc);
-  modalBigPhoto.addEventListener('click', onModalClickElsewhere);
-  commentsLoader.addEventListener('click', onModalClickLoadMore);
+  document.addEventListener('keydown', onModalEscKeydown);
+  modalBigPhoto.addEventListener('click', onModalElsewhereClick);
+  commentsLoader.addEventListener('click', onCommentsLoaderClick);
 
   const photoObject = findPhotoObject(pictureId, photoData);
 
@@ -34,19 +34,19 @@ const closeModalBigPhoto = () => {
   modalBigPhoto.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', onModalKeydownEsc);
-  modalBigPhoto.removeEventListener('click', onModalClickElsewhere);
-  commentsLoader.removeEventListener('click', onModalClickLoadMore);
+  document.removeEventListener('keydown', onModalEscKeydown);
+  modalBigPhoto.removeEventListener('click', onModalElsewhereClick);
+  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 };
 
-function onModalKeydownEsc (evt){
+function onModalEscKeydown (evt){
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModalBigPhoto();
   }
 }
 
-function onModalClickElsewhere (evt) {
+function onModalElsewhereClick (evt) {
   if (!evt.target.closest('.big-picture__preview')) {
     closeModalBigPhoto();
   }
