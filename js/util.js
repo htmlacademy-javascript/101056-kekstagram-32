@@ -24,9 +24,9 @@ const sortItemsInDescendingOrder = (inputItems, comparisonFunction) =>
 
 const debounce = (callback, timeoutDelay) => {
   let timeoutId;
-  return (...args) => {
+  return (...rest) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, args), timeoutDelay);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 };
 
